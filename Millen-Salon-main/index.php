@@ -30,7 +30,7 @@ if(isset($_POST['submit'])) // form field values
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>AC
+  <head>
     <title>Millen Hair Salon ||Home Page</title>
         
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">

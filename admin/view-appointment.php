@@ -139,7 +139,7 @@ while ($row=mysqli_fetch_array($ret)) {
     <td> <?php  
 if($row['Status']=="1")
 {
-  echo "Accepted";
+  echo "Selected";
 }
 
 if($row['Status']=="2")

@@ -4,16 +4,12 @@ error_reporting(0);
 include('includes/dbconnection.php');
 if (strlen($_SESSION['bpmsaid']==0)) {
   header('location:logout.php');
-  } else{
-
-
-
-  ?>
+} else {
+?>
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Millen Hair Salon || Rejected Appointment</title>
-
+<title>Millen Hair Salon|| Manage Services</title>
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- Bootstrap Core CSS -->
 <link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
@@ -41,6 +37,12 @@ if (strlen($_SESSION['bpmsaid']==0)) {
 <script src="js/custom.js"></script>
 <link href="css/custom.css" rel="stylesheet">
 <!--//Metis Menu -->
+<!-- Confirmation Script -->
+<script type="text/javascript">
+	function confirmDelete() {
+		return confirm("Do you really want to delete this service?");
+	}
+</script>
 </head> 
 <body class="cbp-spmenu-push">
 	<div class="main-content">
@@ -54,65 +56,68 @@ if (strlen($_SESSION['bpmsaid']==0)) {
 		<div id="page-wrapper">
 			<div class="main-page">
 				<div class="tables">
-					<h3 class="title1">Rejected Appointment</h3>
-					
-					
-				
+					<h3 class="title1">Manage Services</h3>
 					<div class="table-responsive bs-example widget-shadow">
-						<h4>Rejected Appointment:</h4>
-						<table class="table table-bordered"> <thead> <tr> 
-							<th>#</th> 
-							<th> Appointment Number</th> 
-							<th>Name</th><th>Mobile Number</th> 
-							<th>Appointment Date</th>
-							<th>Appointment Time</th>
-							<th>Branch</th>
-							<th>Action</th> </tr> </thead> <tbody>
-<?php
-$ret=mysqli_query($con,"select *from  tblappointment where Status='2'");
-$cnt=1;
-while ($row=mysqli_fetch_array($ret)) {
-
-?>
-
-						 <tr> <th scope="row"><?php echo $cnt;?></th> 
-						 <td><?php  echo $row['AptNumber'];?></td> 
-						 <td><?php  echo $row['Name'];?></td>
-						 <td><?php  echo $row['PhoneNumber'];?></td>
-						 <td><?php  echo $row['AptDate'];?></td> 
-						 <td><?php  echo $row['AptTime'];?></td> 
-						 <td><?php echo $row['Branch'];?></td> 
-						 <td><a href="view-appointment.php?viewid=<?php echo $row['ID'];?>">View</a></td> </tr>   <?php 
-$cnt=$cnt+1;
-}?></tbody> </table> 
+						<h4>Update Services:</h4>
+						<table class="table table-bordered"> 
+							<thead> 
+								<tr> 
+									<th>#</th> 
+									<th>Service Name</th> 
+									<th>Service Price</th> 
+									<th>Creation Date</th>
+									<th>Action</th> 
+								</tr> 
+							</thead> 
+							<tbody>
+								<?php
+								$ret=mysqli_query($con,"select *from tblservices order by tblservices.ID desc");
+								$cnt=1;
+								while ($row=mysqli_fetch_array($ret)) {
+								?>
+								<tr> 
+									<th scope="row"><?php echo $cnt;?></th> 
+									<td><?php echo $row['ServiceName'];?></td> 
+									<td><?php echo $row['Cost'];?></td>
+									<td><?php echo $row['CreationDate'];?></td> 
+									<td>
+										<a href="edit-services.php?editid=<?php echo $row['ID'];?>">Edit</a> ||
+										<a href="delete-services.php?deleteid=<?php echo $row['ID'];?>" onclick="return confirmDelete();">Delete</a>
+									</td>
+								</tr>
+								<?php
+								$cnt=$cnt+1;
+								}?>
+							</tbody> 
+						</table> 
 					</div>
 				</div>
 			</div>
 		</div>
 		<!--footer-->
-		 <?php include_once('includes/footer.php');?>
+		<?php include_once('includes/footer.php');?>
         <!--//footer-->
 	</div>
 	<!-- Classie -->
-		<script src="js/classie.js"></script>
-		<script>
-			var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
-				showLeftPush = document.getElementById( 'showLeftPush' ),
-				body = document.body;
-				
-			showLeftPush.onclick = function() {
-				classie.toggle( this, 'active' );
-				classie.toggle( body, 'cbp-spmenu-push-toright' );
-				classie.toggle( menuLeft, 'cbp-spmenu-open' );
-				disableOther( 'showLeftPush' );
-			};
+	<script src="js/classie.js"></script>
+	<script>
+		var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
+			showLeftPush = document.getElementById( 'showLeftPush' ),
+			body = document.body;
 			
-			function disableOther( button ) {
-				if( button !== 'showLeftPush' ) {
-					classie.toggle( showLeftPush, 'disabled' );
-				}
+		showLeftPush.onclick = function() {
+			classie.toggle( this, 'active' );
+			classie.toggle( body, 'cbp-spmenu-push-toright' );
+			classie.toggle( menuLeft, 'cbp-spmenu-open' );
+			disableOther( 'showLeftPush' );
+		};
+		
+		function disableOther( button ) {
+			if( button !== 'showLeftPush' ) {
+				classie.toggle( showLeftPush, 'disabled' );
 			}
-		</script>
+		}
+	</script>
 	<!--scrolling js-->
 	<script src="js/jquery.nicescroll.js"></script>
 	<script src="js/scripts.js"></script>
@@ -121,4 +126,4 @@ $cnt=$cnt+1;
 	<script src="js/bootstrap.js"> </script>
 </body>
 </html>
-<?php }  ?>
+<?php } ?>

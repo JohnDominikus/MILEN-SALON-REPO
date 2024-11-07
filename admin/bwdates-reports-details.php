@@ -12,7 +12,7 @@ if (strlen($_SESSION['bpmsaid']==0)) {
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Millen Hair Salon || Rejected Appointment</title>
+<title>Millen Hair Salon || B/W date Reports</title>
 
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- Bootstrap Core CSS -->
@@ -54,35 +54,44 @@ if (strlen($_SESSION['bpmsaid']==0)) {
 		<div id="page-wrapper">
 			<div class="main-page">
 				<div class="tables">
-					<h3 class="title1">Rejected Appointment</h3>
+					<h3 class="title1">Between dates reports</h3>
 					
 					
 				
 					<div class="table-responsive bs-example widget-shadow">
-						<h4>Rejected Appointment:</h4>
-						<table class="table table-bordered"> <thead> <tr> 
-							<th>#</th> 
-							<th> Appointment Number</th> 
-							<th>Name</th><th>Mobile Number</th> 
-							<th>Appointment Date</th>
-							<th>Appointment Time</th>
-							<th>Branch</th>
-							<th>Action</th> </tr> </thead> <tbody>
+						<h4>Between dates reports:</h4>
+ <?php
+$fdate=$_POST['fromdate'];
+$tdate=$_POST['todate'];
+
+?>
+<h5 align="center" style="color:blue">Report from <?php echo $fdate?> to <?php echo $tdate?></h5>
+
+						<table class="table table-bordered"> 
+							<thead> <tr> 
+								<th>#</th> 
+								<th>Invoice Id</th> 
+								<th>Customer Name</th> 
+								<th>Invoice Date</th> 
+								<th>Action</th>
+							</tr> 
+							</thead> <tbody>
 <?php
-$ret=mysqli_query($con,"select *from  tblappointment where Status='2'");
+$ret=mysqli_query($con,"select distinct tblcustomers.Name,tblinvoice.BillingId,tblinvoice.PostingDate from  tblcustomers   
+	join tblinvoice on tblcustomers.ID=tblinvoice.Userid  where date(tblinvoice.PostingDate) between '$fdate' and '$tdate'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
 ?>
 
-						 <tr> <th scope="row"><?php echo $cnt;?></th> 
-						 <td><?php  echo $row['AptNumber'];?></td> 
-						 <td><?php  echo $row['Name'];?></td>
-						 <td><?php  echo $row['PhoneNumber'];?></td>
-						 <td><?php  echo $row['AptDate'];?></td> 
-						 <td><?php  echo $row['AptTime'];?></td> 
-						 <td><?php echo $row['Branch'];?></td> 
-						 <td><a href="view-appointment.php?viewid=<?php echo $row['ID'];?>">View</a></td> </tr>   <?php 
+						 <tr> 
+						 	<th scope="row"><?php echo $cnt;?></th> 
+						 	<td><?php  echo $row['BillingId'];?></td>
+						 	<td><?php  echo $row['Name'];?></td>
+						 	<td><?php  echo $row['PostingDate'];?></td> 
+						 		<td><a href="view-invoice.php?invoiceid=<?php  echo $row['BillingId'];?>">View</a></td> 
+
+						  </tr>   <?php 
 $cnt=$cnt+1;
 }?></tbody> </table> 
 					</div>

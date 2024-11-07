@@ -12,7 +12,7 @@ if (strlen($_SESSION['bpmsaid']==0)) {
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Millen Hair Salon || Rejected Appointment</title>
+<title>Millen Hair Salon|| Update Appointment</title>
 
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- Bootstrap Core CSS -->
@@ -54,37 +54,117 @@ if (strlen($_SESSION['bpmsaid']==0)) {
 		<div id="page-wrapper">
 			<div class="main-page">
 				<div class="tables">
-					<h3 class="title1">Rejected Appointment</h3>
+					<h3 class="title1">All Appointment</h3>
 					
 					
 				
 					<div class="table-responsive bs-example widget-shadow">
-						<h4>Rejected Appointment:</h4>
-						<table class="table table-bordered"> <thead> <tr> 
-							<th>#</th> 
-							<th> Appointment Number</th> 
-							<th>Name</th><th>Mobile Number</th> 
-							<th>Appointment Date</th>
-							<th>Appointment Time</th>
-							<th>Branch</th>
-							<th>Action</th> </tr> </thead> <tbody>
-<?php
-$ret=mysqli_query($con,"select *from  tblappointment where Status='2'");
+						<p style="font-size:16px; color:red" align="center"> <?php if($msg){
+    echo $msg;
+  }  ?> </p>
+						<h4>All Appointment:</h4>
+						<?php
+$cid=$_GET['editid'];
+$ret=mysqli_query($con,"select * from tblappointment where ID='$cid'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
 ?>
+						<table class="table table-bordered">
+							<tr>
+    <th>Appointment Number</th>
+    <td><?php  echo $row['AptNumber'];?></td>
+  </tr>
+  <tr>
+<th>Name</th>
+    <td><?php  echo $row['Name'];?></td>
+  </tr>
 
-						 <tr> <th scope="row"><?php echo $cnt;?></th> 
-						 <td><?php  echo $row['AptNumber'];?></td> 
-						 <td><?php  echo $row['Name'];?></td>
-						 <td><?php  echo $row['PhoneNumber'];?></td>
-						 <td><?php  echo $row['AptDate'];?></td> 
-						 <td><?php  echo $row['AptTime'];?></td> 
-						 <td><?php echo $row['Branch'];?></td> 
-						 <td><a href="view-appointment.php?viewid=<?php echo $row['ID'];?>">View</a></td> </tr>   <?php 
-$cnt=$cnt+1;
-}?></tbody> </table> 
+<tr>
+    <th>Email</th>
+    <td><?php  echo $row['Email'];?></td>
+  </tr>
+   <tr>
+    <th>Mobile Number</th>
+    <td><?php  echo $row['PhoneNumber'];?></td>
+  </tr>
+   <tr>
+    <th>Appointment Date</th>
+    <td><?php  echo $row['AptDate'];?></td>
+  </tr>
+ 
+<tr>
+    <th>Appointment Time</th>
+    <td><?php  echo $row['AptTime'];?></td>
+  </tr>
+  
+  <tr>
+    <th>Services</th>
+    <td><?php  echo $row['Services'];?></td>
+  </tr>
+  <tr>
+    <th>Apply Date</th>
+    <td><?php  echo $row['ApplyDate'];?></td>
+  </tr>
+  
+
+<tr>
+    <th>Status</th>
+    <td> <?php  
+if($row['Status']=="1")
+{
+  echo "Selected";
+}
+
+if($row['Status']=="2")
+{
+  echo "Rejected";
+}
+
+     ;?></td>
+  </tr>
+						</table>
+						<table class="table table-bordered">
+							<?php if($row['Remark']==""){ ?>
+
+
+<form name="submit" method="post" enctype="multipart/form-data"> 
+
+<tr>
+    <th>Remark :</th>
+    <td>
+    <textarea name="remark" placeholder="" rows="12" cols="14" class="form-control wd-450" required="true"></textarea></td>
+   </tr>
+
+  <tr>
+    <th>Status :</th>
+    <td>
+   <select name="status" class="form-control wd-450" required="true" >
+     <option value="1" selected="true">Selected</option>
+     <option value="2">Rejected</option>
+   </select></td>
+  </tr>
+
+  <tr align="center">
+    <td colspan="2"><button type="submit" name="submit" class="btn btn-az-primary pd-x-20">Submit</button></td>
+  </tr>
+  </form>
+<?php } else { ?>
+						</table>
+						<table class="table table-bordered">
+							<tr>
+    <th>Remark</th>
+    <td><?php echo $row['Remark']; ?></td>
+  </tr>
+
+
+<tr>
+<th>Remark date</th>
+<td><?php echo $row['Remarkdate']; ?>  </td></tr>
+
+						</table>
+						<?php } ?>
+						<?php } ?>
 					</div>
 				</div>
 			</div>

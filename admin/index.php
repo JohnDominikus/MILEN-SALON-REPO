@@ -2,17 +2,26 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-if (strlen($_SESSION['bpmsaid']==0)) {
-  header('location:logout.php');
-  } else{
 
-
-
+if(isset($_POST['login']))
+  {
+    $adminuser=$_POST['username'];
+    $password=md5($_POST['password']);
+    $query=mysqli_query($con,"select ID from tbladmin where  UserName='$adminuser' && Password='$password' ");
+    $ret=mysqli_fetch_array($query);
+    if($ret>0){
+      $_SESSION['bpmsaid']=$ret['ID'];
+     header('location:dashboard.php');
+    }
+    else{
+    $msg="Invalid Details.";
+    }
+  }
   ?>
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Millen Hair Salon || Rejected Appointment</title>
+<title>Millen Hair Salon | Login Page </title> 
 
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- Bootstrap Core CSS -->
@@ -44,54 +53,45 @@ if (strlen($_SESSION['bpmsaid']==0)) {
 </head> 
 <body class="cbp-spmenu-push">
 	<div class="main-content">
-		<!--left-fixed -navigation-->
-		 <?php include_once('includes/sidebar.php');?>
-		<!--left-fixed -navigation-->
-		<!-- header-starts -->
-		 <?php include_once('includes/header.php');?>
-		<!-- //header-ends -->
+		
 		<!-- main content start-->
 		<div id="page-wrapper">
-			<div class="main-page">
-				<div class="tables">
-					<h3 class="title1">Rejected Appointment</h3>
-					
-					
-				
-					<div class="table-responsive bs-example widget-shadow">
-						<h4>Rejected Appointment:</h4>
-						<table class="table table-bordered"> <thead> <tr> 
-							<th>#</th> 
-							<th> Appointment Number</th> 
-							<th>Name</th><th>Mobile Number</th> 
-							<th>Appointment Date</th>
-							<th>Appointment Time</th>
-							<th>Branch</th>
-							<th>Action</th> </tr> </thead> <tbody>
-<?php
-$ret=mysqli_query($con,"select *from  tblappointment where Status='2'");
-$cnt=1;
-while ($row=mysqli_fetch_array($ret)) {
-
-?>
-
-						 <tr> <th scope="row"><?php echo $cnt;?></th> 
-						 <td><?php  echo $row['AptNumber'];?></td> 
-						 <td><?php  echo $row['Name'];?></td>
-						 <td><?php  echo $row['PhoneNumber'];?></td>
-						 <td><?php  echo $row['AptDate'];?></td> 
-						 <td><?php  echo $row['AptTime'];?></td> 
-						 <td><?php echo $row['Branch'];?></td> 
-						 <td><a href="view-appointment.php?viewid=<?php echo $row['ID'];?>">View</a></td> </tr>   <?php 
-$cnt=$cnt+1;
-}?></tbody> </table> 
+			<div class="main-page login-page ">
+				<h3 class="title1"> Millen Hair Salon</h3>
+				<div class="widget-shadow">
+					<div class="login-top">
+						<h4>Welcome back Gorgeous Admin ! </h4>
+					</div>
+					<div class="login-body">
+						<form role="form" method="post" action="">
+							<p style="font-size:16px; color:red" align="center"> <?php if($msg){
+    echo $msg;
+  }  ?> </p>
+							<input type="text" class="user" name="username" placeholder="Username" required="true">
+							<input type="password" name="password" class="lock" placeholder="Password" required="true">
+							<input type="submit" name="login" value="Sign In">
+							<div class="forgot-grid">
+								
+								<div class="forgot">
+									<a href="../index.php">Back to Home</a>
+								</div>
+								<div class="clearfix"> </div>
+							</div>
+							<div class="forgot-grid">
+								
+								<div class="forgot">
+									<a href="forgot-password.php">forgot password?</a>
+								</div>
+								<div class="clearfix"> </div>
+							</div>
+						</form>
 					</div>
 				</div>
+				
+				
 			</div>
 		</div>
-		<!--footer-->
-		 <?php include_once('includes/footer.php');?>
-        <!--//footer-->
+		
 	</div>
 	<!-- Classie -->
 		<script src="js/classie.js"></script>
@@ -118,7 +118,6 @@ $cnt=$cnt+1;
 	<script src="js/scripts.js"></script>
 	<!--//scrolling js-->
 	<!-- Bootstrap Core JavaScript -->
-	<script src="js/bootstrap.js"> </script>
+   <script src="js/bootstrap.js"> </script>
 </body>
 </html>
-<?php }  ?>

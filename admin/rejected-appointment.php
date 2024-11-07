@@ -81,7 +81,7 @@ while ($row=mysqli_fetch_array($ret)) {
 						 <td><?php  echo $row['PhoneNumber'];?></td>
 						 <td><?php  echo $row['AptDate'];?></td> 
 						 <td><?php  echo $row['AptTime'];?></td> 
-						 <td><?php echo $row['Branch'];?></td> 
+						 <td><?php echo $row['branch'];?></td> 
 						 <td><a href="view-appointment.php?viewid=<?php echo $row['ID'];?>">View</a></td> </tr>   <?php 
 $cnt=$cnt+1;
 }?></tbody> </table> 

@@ -6,13 +6,11 @@ if (strlen($_SESSION['bpmsaid']==0)) {
   header('location:logout.php');
   } else{
 
-
-
   ?>
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Millen Hair Salon || Rejected Appointment</title>
+<title>Millen Hair Salon || Customer List</title>
 
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- Bootstrap Core CSS -->
@@ -53,38 +51,82 @@ if (strlen($_SESSION['bpmsaid']==0)) {
 		<!-- main content start-->
 		<div id="page-wrapper">
 			<div class="main-page">
-				<div class="tables">
-					<h3 class="title1">Rejected Appointment</h3>
+				<div class="tables" id="exampl">
+					<h3 class="title1">Invoice Details</h3>
 					
-					
-				
-					<div class="table-responsive bs-example widget-shadow">
-						<h4>Rejected Appointment:</h4>
-						<table class="table table-bordered"> <thead> <tr> 
-							<th>#</th> 
-							<th> Appointment Number</th> 
-							<th>Name</th><th>Mobile Number</th> 
-							<th>Appointment Date</th>
-							<th>Appointment Time</th>
-							<th>Branch</th>
-							<th>Action</th> </tr> </thead> <tbody>
-<?php
-$ret=mysqli_query($con,"select *from  tblappointment where Status='2'");
+	<?php
+	$invid=intval($_GET['invoiceid']);
+$ret=mysqli_query($con,"select DISTINCT  tblinvoice.PostingDate,tblcustomers.Name,tblcustomers.Email,tblcustomers.MobileNumber,tblcustomers.Gender
+	from  tblinvoice 
+	join tblcustomers on tblcustomers.ID=tblinvoice.Userid 
+	where tblinvoice.BillingId='$invid'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
-?>
+?>				
+				
+					<div class="table-responsive bs-example widget-shadow">
+						<h4>Invoice #<?php echo $invid;?></h4>
+						<table class="table table-bordered" width="100%" border="1"> 
+<tr>
+<th colspan="6">Customer Details</th>	
+</tr>
+							 <tr> 
+								<th>Name</th> 
+								<td><?php echo $row['Name']?></td> 
+								<th>Contact no.</th> 
+								<td><?php echo $row['MobileNumber']?></td>
+								<th>Email </th> 
+								<td><?php echo $row['Email']?></td>
+							</tr> 
+							 <tr> 
+								<th>Gender</th> 
+								<td><?php echo $row['Gender']?></td> 
+								<th>Invoice Date</th> 
+								<td colspan="3"><?php echo $row['PostingDate']?></td> 
+							</tr> 
+<?php }?>
+</table> 
+<table class="table table-bordered" width="100%" border="1"> 
+<tr>
+<th colspan="3">Services Details</th>	
+</tr>
+<tr>
+<th>#</th>	
+<th>Service</th>
+<th>Cost</th>
+</tr>
 
-						 <tr> <th scope="row"><?php echo $cnt;?></th> 
-						 <td><?php  echo $row['AptNumber'];?></td> 
-						 <td><?php  echo $row['Name'];?></td>
-						 <td><?php  echo $row['PhoneNumber'];?></td>
-						 <td><?php  echo $row['AptDate'];?></td> 
-						 <td><?php  echo $row['AptTime'];?></td> 
-						 <td><?php echo $row['Branch'];?></td> 
-						 <td><a href="view-appointment.php?viewid=<?php echo $row['ID'];?>">View</a></td> </tr>   <?php 
+<?php
+$ret=mysqli_query($con,"select tblservices.ServiceName,tblservices.Cost  
+	from  tblinvoice 
+	join tblservices on tblservices.ID=tblinvoice.ServiceId 
+	where tblinvoice.BillingId='$invid'");
+$cnt=1;
+$gtotal=0;  // Initialize grand total
+while ($row=mysqli_fetch_array($ret)) {
+	?>
+
+<tr>
+<th><?php echo $cnt;?></th>
+<td><?php echo $row['ServiceName']?></td>	
+<td><?php echo $subtotal=$row['Cost']?></td>
+</tr>
+<?php 
 $cnt=$cnt+1;
-}?></tbody> </table> 
+$gtotal+=$subtotal;
+} ?>
+
+<tr>
+<th colspan="2" style="text-align:center">Grand Total</th>
+<th><?php echo $gtotal?></th>	
+
+</tr>
+</table>
+  <p style="margin-top:1%"  align="center">
+  <i class="fa fa-print fa-2x" style="cursor: pointer;"  OnClick="CallPrint(this.value)" ></i>
+</p>
+
 					</div>
 				</div>
 			</div>
@@ -119,6 +161,22 @@ $cnt=$cnt+1;
 	<!--//scrolling js-->
 	<!-- Bootstrap Core JavaScript -->
 	<script src="js/bootstrap.js"> </script>
+	  <script>
+
+function CallPrint(strid) {
+  var prtContent = document.getElementById("exampl");  // Corrected ID here
+  var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+  WinPrint.document.write('<html><head><title>Print Invoice</title>');
+  WinPrint.document.write('<link rel="stylesheet" type="text/css" href="css/bootstrap.css">');
+  WinPrint.document.write('</head><body>');
+  WinPrint.document.write(prtContent.innerHTML);
+  WinPrint.document.write('</body></html>');
+  WinPrint.document.close();
+  WinPrint.focus();
+  WinPrint.print();
+  WinPrint.close();
+}
+</script>
 </body>
 </html>
-<?php }  ?>
+<?php }  ?> 
