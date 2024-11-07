@@ -6,29 +6,63 @@ include('includes/dbconnection.php');
 if (strlen($_SESSION['bpmsaid'] == 0)) {
     header('location:logout.php');
     exit;
-} else {
-    
-    function fetchAppointments($con, $searchTerm = '') {
-        $query = "SELECT * FROM tblappointment WHERE Name LIKE '%$searchTerm%' OR Email LIKE '%$searchTerm%' OR PhoneNumber LIKE '%$searchTerm%' ORDER BY ApplyDate DESC";
-        $result = mysqli_query($con, $query);
-        return $result;
-    }
-
-    if (isset($_POST['appointmentId']) && isset($_POST['status'])) {
-        $status = mysqli_real_escape_string($con, $_POST['status']);
-        $appointmentId = intval($_POST['appointmentId']);
-
-        $updateQuery = "UPDATE tblappointment SET Status = '$status' WHERE ID = $appointmentId";
-        if (mysqli_query($con, $updateQuery)) {
-            echo "<script>alert('Status updated successfully');</script>";
-        } else {
-            echo "<script>alert('Error updating status: " . mysqli_error($con) . "');</script>";
-        }
-    }
-
-    $searchTerm = isset($_POST['search']) ? $_POST['search'] : '';
-    $appointments = fetchAppointments($con, $searchTerm);
 }
+
+if (isset($_POST['appointmentId']) && isset($_POST['status'])) {
+    // Handle Status Update
+    $status = mysqli_real_escape_string($con, $_POST['status']);
+    $appointmentId = intval($_POST['appointmentId']);
+    $updateQuery = "UPDATE tblappointment SET Status = '$status' WHERE ID = $appointmentId";
+    if (mysqli_query($con, $updateQuery)) {
+        echo "<script>alert('Status updated successfully');</script>";
+    } else {
+        echo "<script>alert('Error updating status: " . mysqli_error($con) . "');</script>";
+    }
+}
+
+if (isset($_POST['updateAppointmentId'])) {
+    // Handle Appointment Edit
+    $appointmentId = intval($_POST['updateAppointmentId']);
+    $name = mysqli_real_escape_string($con, $_POST['name']);
+    $email = mysqli_real_escape_string($con, $_POST['email']);
+    $phoneNumber = mysqli_real_escape_string($con, $_POST['phoneNumber']);
+    $aptDate = mysqli_real_escape_string($con, $_POST['aptDate']);
+    $aptTime = mysqli_real_escape_string($con, $_POST['aptTime']);
+    $services = mysqli_real_escape_string($con, $_POST['services']);
+    $branch = mysqli_real_escape_string($con, $_POST['branch']);
+
+    $updateQuery = "UPDATE tblappointment SET 
+        Name='$name', 
+        Email='$email', 
+        PhoneNumber='$phoneNumber', 
+        AptDate='$aptDate', 
+        AptTime='$aptTime', 
+        Services='$services', 
+        Branch='$branch' 
+        WHERE ID = $appointmentId";
+    
+    if (mysqli_query($con, $updateQuery)) {
+        echo "<script>alert('Appointment updated successfully');</script>";
+    } else {
+        echo "<script>alert('Error updating appointment: " . mysqli_error($con) . "');</script>";
+    }
+}
+
+if (isset($_GET['deleteAppointmentId'])) {
+    // Handle Appointment Deletion
+    $appointmentId = intval($_GET['deleteAppointmentId']);
+    $deleteQuery = "DELETE FROM tblappointment WHERE ID = $appointmentId";
+    if (mysqli_query($con, $deleteQuery)) {
+        echo "<script>alert('Appointment deleted successfully');</script>";
+    } else {
+        echo "<script>alert('Error deleting appointment: " . mysqli_error($con) . "');</script>";
+    }
+}
+
+$searchTerm = isset($_POST['search']) ? $_POST['search'] : '';
+
+$query = "SELECT * FROM tblappointment WHERE Name LIKE '%$searchTerm%' OR Email LIKE '%$searchTerm%' OR PhoneNumber LIKE '%$searchTerm%' ORDER BY ApplyDate DESC";
+$appointments = mysqli_query($con, $query);
 ?>
 
 <!DOCTYPE HTML>
@@ -45,12 +79,11 @@ if (strlen($_SESSION['bpmsaid'] == 0)) {
     <div class="main-content">
         <?php include_once('includes/sidebar.php'); ?>
         <?php include_once('includes/header.php'); ?>
-        
+
         <div id="page-wrapper">
             <div class="main-page">
                 <div class="tables">
                     <h3 class="title1">Appointments</h3>
-
                     <div class="table-responsive bs-example widget-shadow">
                         <h4>Appointments:</h4>
                         <form method="post">
@@ -92,6 +125,7 @@ if (strlen($_SESSION['bpmsaid'] == 0)) {
                                         <td><?php echo $row['Branch']; ?></td>
                                         <td><?php echo $row['ApplyDate']; ?></td>
                                         <td>
+                                            <!-- Status Update -->
                                             <form method="post" style="display:inline;">
                                                 <input type="hidden" name="appointmentId" value="<?php echo $row['ID']; ?>">
                                                 <select name="status" onchange="confirmStatusChange(this.form)">
@@ -100,8 +134,12 @@ if (strlen($_SESSION['bpmsaid'] == 0)) {
                                                     <option value="Rejected" <?php if($row['Status'] == 'Rejected') echo 'selected'; ?>>Rejected</option>
                                                 </select>
                                             </form>
+                                            <!-- View Button -->
                                             <button class="btn btn-success" data-toggle="modal" data-target="#viewAppointmentModal" onclick="viewAppointmentDetails(<?php echo $row['ID']; ?>)">View</button>
+                                            <!-- Edit Button -->
                                             <button class="btn btn-warning" data-toggle="modal" data-target="#editAppointmentModal" onclick="editAppointmentDetails(<?php echo $row['ID']; ?>)">Edit</button>
+                                            <!-- Delete Button -->
+                                            <a href="appointments.php?deleteAppointmentId=<?php echo $row['ID']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this appointment?');">Delete</a>
                                         </td>
                                     </tr>
                                 <?php
@@ -152,49 +190,40 @@ if (strlen($_SESSION['bpmsaid'] == 0)) {
                         <input type="hidden" name="updateAppointmentId" id="updateAppointmentId">
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" name="name" id="editName" class="form-control">
+                            <input type="text" class="form-control" name="name" id="editName" required>
                         </div>
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" name="email" id="editEmail" class="form-control">
+                            <input type="email" class="form-control" name="email" id="editEmail" required>
                         </div>
                         <div class="form-group">
                             <label>Phone Number</label>
-                            <input type="text" name="phoneNumber" id="editPhoneNumber" class="form-control">
+                            <input type="text" class="form-control" name="phoneNumber" id="editPhoneNumber" required>
                         </div>
                         <div class="form-group">
                             <label>Appointment Date</label>
-                            <input type="date" name="aptDate" id="editAptDate" class="form-control">
+                            <input type="date" class="form-control" name="aptDate" id="editAptDate" required>
                         </div>
                         <div class="form-group">
                             <label>Appointment Time</label>
-                            <input type="time" name="aptTime" id="editAptTime" class="form-control">
+                            <input type="time" class="form-control" name="aptTime" id="editAptTime" required>
                         </div>
                         <div class="form-group">
                             <label>Services</label>
-                            <input type="text" name="services" id="editServices" class="form-control">
+                            <input type="text" class="form-control" name="services" id="editServices" required>
                         </div>
                         <div class="form-group">
                             <label>Branch</label>
-                            <input type="text" name="branch" id="editBranch" class="form-control">
+                            <input type="text" class="form-control" name="branch" id="editBranch" required>
                         </div>
-                        <button type="submit" class="btn btn-success">Save Changes</button>
+                        <button type="submit" class="btn btn-primary">Update Appointment</button>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        function confirmStatusChange(form) {
-            if (confirm('Do you want to continue with this status update?')) {
-                form.submit();
-            }
-        }
-
         function viewAppointmentDetails(appointmentId) {
             var appointment = document.querySelector(`#appointment-${appointmentId}`);
             var details = `
@@ -220,6 +249,10 @@ if (strlen($_SESSION['bpmsaid'] == 0)) {
             document.getElementById('editAptTime').value = appointment.querySelector('td:nth-child(7)').textContent;
             document.getElementById('editServices').value = appointment.querySelector('td:nth-child(8)').textContent;
             document.getElementById('editBranch').value = appointment.querySelector('td:nth-child(9)').textContent;
+        }
+
+        function confirmStatusChange(form) {
+            return confirm("Are you sure you want to update the status?");
         }
     </script>
 </body>
