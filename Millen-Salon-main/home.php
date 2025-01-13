@@ -30,7 +30,7 @@ if(isset($_POST['submit'])) // form field values
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>AC
+  <head>
     <title>Millen Hair Salon ||Home Page</title>
         
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">
@@ -57,45 +57,49 @@ if(isset($_POST['submit'])) // form field values
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
-	  <?php include_once('includes/header.php');?>
+  <?php include_once('includes/header.php');?>
     <!-- END nav -->
 
-	<section id="home-section" class="hero" style="background-image: url(images/redbg.jpg);" data-stellar-background-ratio="0.5">
-  <div class="home-slider owl-carousel">
-    <div class="slider-item js-fullheight">
-      <div class="overlay"></div>
-      <div class="container-fluid p-0">
-        <div class="row d-md-flex no-gutters slider-text align-items-end justify-content-end" data-scrollax-parent="true">
-          <img class="one-third align-self-end order-md-last img-fluid" src="images/har2.png" alt="">
-          <div class="one-forth d-flex align-items-center ftco-animate text-white" data-scrollax=" properties: { translateY: '70%' }">
-            <div class="text mt-5 text-white">
-              <span class="subheading text-white">Beauty Parlour</span>
-              <h1 class="mb-4 text-white">Good hair days start here.</h1>
-              <p class="mb-4 text-white">Ready to ditch the bad hair days and embrace your hair goals? We're experts in all things hair, from classic cuts and vibrant colors to the trendiest styles. Whether you're craving a complete makeover or just need a bit of TLC, we'll create a look that's perfect for you. ✨</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <section id="home-section" class="hero" style="background-image: url(images/redbg.jpg);" data-stellar-background-ratio="0.5">
+		  <div class="home-slider owl-carousel">
+	      <div class="slider-item js-fullheight">
+	      	<div class="overlay"></div>
+	        <div class="container-fluid p-0">
+	          <div class="row d-md-flex no-gutters slider-text align-items-end justify-content-end" data-scrollax-parent="true">
+	          	<img class="one-third align-self-end order-md-last img-fluid" src="images/har2.png" alt="">
+		          <div class="one-forth d-flex align-items-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
+		          	<div class="text mt-5">
+		          		<span class="subheading">Beauty Parlour</span>
+			            <h1 class="mb-4">Good hair days start here.</h1>
+			            <p class="mb-4">Ready to ditch the bad hair days and embrace your hair goals?   We're experts in all things hair, from classic cuts and vibrant colors to the trendiest styles.  
+							Whether you're craving a complete makeover or just need a bit of TLC, we'll create a look that's perfect for you.  ✨</p>
+			            
+			           
+		            </div>
+		          </div>
+	        	</div>
+	        </div>
+	      </div>
 
-    <div class="slider-item js-fullheight">
-      <div class="overlay"></div>
-      <div class="container-fluid p-0">
-        <div class="row d-flex no-gutters slider-text align-items-center justify-content-end" data-scrollax-parent="true">
-          <img class="one-third align-self-end order-md-last img-fluid" src="images/hair.png" alt="">
-          <div class="one-forth d-flex align-items-center ftco-animate text-white" data-scrollax=" properties: { translateY: '70%' }">
-            <div class="text mt-5 text-white">
-              <span class="subheading text-white">Natural Beauty</span>
-              <h1 class="mb-4 text-white">Get the look you deserve.</h1>
-              <p class="mb-4 text-white">This parlour provides huge facilities with advanced technology equipments and best quality service. Here we offer best treatment that you might have never experienced before.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
+	      <div class="slider-item js-fullheight">
+	      	<div class="overlay"></div>
+	        <div class="container-fluid p-0">
+	          <div class="row d-flex no-gutters slider-text align-items-center justify-content-end" data-scrollax-parent="true">
+	          	<img class="one-third align-self-end order-md-last img-fluid" src="images/hair.png" alt="">
+		          <div class="one-forth d-flex align-items-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
+		          	<div class="text mt-5">
+		          		<span class="subheading">Natural Beauty</span>
+			            <h1 class="mb-4">Get the look you deserve.</h1>
+			            <p class="mb-4">This parlour provides huge facilities with advanced technology equipments and best quality service. Here we offer best treatment that you might have never experienced before.</p>
+			            
+			           
+		            </div>
+		          </div>
+	        	</div>
+	        </div>
+	      </div>
+	    </div>
+    </section>
 
 
 <br>
